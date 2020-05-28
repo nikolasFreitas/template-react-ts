@@ -2,6 +2,10 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "extends": ["airbnb", "airbnb/hooks"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
     "quotes": ["error", "single", {
