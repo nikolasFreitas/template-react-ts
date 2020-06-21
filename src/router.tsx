@@ -3,6 +3,7 @@ import {
   BrowserRouter, Switch, Route, Redirect,
 } from 'react-router-dom';
 import Home from './screens/Home';
+import Login from './screens/Login';
 
 
 const AppRouter = () => (
@@ -11,10 +12,11 @@ const AppRouter = () => (
       <Route strict exact path="/">
         <Home />
       </Route>
-      <Route exact path="/not-found" />
-      <Route path="*">
-        <Redirect to="/not-found" />
+      <Route exact path="/login">
+        <Login />
       </Route>
+      <Route exact path="/not-found" />
+      <Redirect from="*" to="/not-found" />
     </Switch>
   </BrowserRouter>
 );
