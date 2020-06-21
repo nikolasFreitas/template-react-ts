@@ -1,18 +1,35 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "extends": ["airbnb", "airbnb/hooks"],
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "plugin:import/typescript"
+  ],
   "env": {
     "browser": true,
     "node": true,
     "jest": true
   },
   "rules": {
-    "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
-    "quotes": ["error", "single", {
-      "avoidEscape": true,
-      "allowTemplateLiterals": true
-      }],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".tsx"
+        ]
+      }
+    ],
+    "quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      }
+    ],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -28,12 +45,21 @@
   },
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [ ".ts", ".tsx" ]
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
     },
-    "import/extensions": [".ts", ".tsx"],
+    "import/extensions": [
+      ".ts",
+      ".tsx"
+    ],
     "import/resolver": {
       "node": {
-        "extensions": [".ts", ".tsx"]
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
       }
     }
   }
