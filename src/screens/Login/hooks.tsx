@@ -20,23 +20,11 @@ export default () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const errorMessage = useRef('');
-
   if (isSubmitting) {
     setTimeout(() => {
       setIsSubmitting(false);
     }, 1500);
   }
-
-  useEffect(() => {
-    if (isSubmitting) {
-      if (!inputsValue.password || !inputsValue.username) {
-        errorMessage.current = 'Was submitted with errors';
-      } else {
-        errorMessage.current = '';
-      }
-    }
-  }, [isSubmitting]);
 
   return {
     submitStatus: {
@@ -45,6 +33,5 @@ export default () => {
     },
     inputsValue,
     setInputsValue,
-    errorMessage: errorMessage.current,
   };
 };

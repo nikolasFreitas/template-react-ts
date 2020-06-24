@@ -35,12 +35,7 @@ export default () => {
             </button>
           </Styled.InputWrapper>
         </form>
-        {hooks.errorMessage && (
-        <Styled.ErrorMessage>
-          {hooks.errorMessage}
-        </Styled.ErrorMessage>
-        )}
-
+        <Styled.ErrorMessage> deu erro aqui </Styled.ErrorMessage>
       </Styled.LoginBox>
     </Styled.Container>
   );
