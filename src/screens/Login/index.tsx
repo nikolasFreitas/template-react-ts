@@ -12,6 +12,7 @@ export default () => {
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     hooks.setInputsValue({ [e.target.name]: e.target.value });
   };
+
   return (
     <Styled.Container>
       <Styled.LoginBox>

@@ -2,7 +2,9 @@ import React from 'react';
 import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react-hooks';
 import LoginScreen from '../screens/Login';
+import loginHooks from '../screens/Login/hooks';
 
 describe('#LoginScreen', () => {
   describe('UI', () => {
@@ -38,6 +40,16 @@ describe('#LoginScreen', () => {
   });
 
   describe('Hooks', () => {
+    it('should set password', () => {
+      const { result } = renderHook(() => loginHooks());
+      const password = 'gg';
+      act(() => {
+        result.current.setInputsValue({
+          password,
+        });
+      });
 
+      expect(result.current.inputsValue.password).toEqual(password);
+    });
   });
 });
