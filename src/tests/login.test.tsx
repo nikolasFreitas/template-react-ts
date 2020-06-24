@@ -1,12 +1,10 @@
 import React from 'react';
 import {
-  render, screen, fireEvent,
+  render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
 import LoginScreen from '../screens/Login';
 
 describe('#LoginScreen', () => {
-  jest.useFakeTimers();
   describe('UI', () => {
     beforeEach(() => {
       render(<LoginScreen />);
@@ -26,18 +24,16 @@ describe('#LoginScreen', () => {
       const submitButton = screen.getByTestId('submit-login');
       expect(submitButton).toBeEnabled();
 
-      act(() => {
-        fireEvent.click(submitButton);
-      });
+      fireEvent.click(submitButton);
 
       expect(submitButton).toBeDisabled();
 
       // Waits the submit ends
-
-      act(() => {
-        jest.runAllTimers();
+      await waitFor(() => {
+        expect(submitButton).toBeEnabled();
+      }, {
+        timeout: 1500,
       });
-      expect(submitButton).toBeEnabled();
     });
   });
 
