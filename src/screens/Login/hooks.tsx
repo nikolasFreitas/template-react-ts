@@ -1,5 +1,5 @@
 import {
-  useState, useReducer, useEffect, useRef,
+  useState, useReducer,
 } from 'react';
 
 export interface InputReducerState {
