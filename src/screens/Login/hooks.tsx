@@ -1,19 +1,19 @@
 import {
-  useState, useReducer,
+  useState,
 } from 'react';
 
-export interface InputReducerState {
-  username: string,
-  password: string,
-}
+import { LoginApi } from '../../service';
 
-export interface InputReducerAction {
-  username?: string,
-  password?: string,
-}
+const localSave = (token: string) => {
+  window.localStorage.setItem('user-token', token);
+};
 
+// TODO
+/*
+  Fazer a hook de erros
+ */
 export default () => {
-  const [inputsValue, setInputsValue] = useReducer((s: InputReducerState, a: InputReducerAction) => ({ ...s, ...a }), {
+  const [inputsValue, setInputsValue] = useState({
     username: '',
     password: '',
   });
@@ -21,9 +21,12 @@ export default () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isSubmitting) {
-    setTimeout(() => {
-      setIsSubmitting(false);
-    }, 1500);
+    try {
+      // const response = await LoginApi.login(inputsValue.username, inputsValue.password);
+      // localSave(response.data.token);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return {

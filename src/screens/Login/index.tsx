@@ -10,7 +10,12 @@ export default () => {
   };
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    hooks.setInputsValue({ [e.target.name]: e.target.value });
+    const { target } = e;
+    hooks.setInputsValue((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }
+    ));
   };
 
   return (
