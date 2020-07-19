@@ -3,7 +3,6 @@ import {
   useReducer,
   useEffect,
 } from 'react';
-import { AxiosResponse } from 'axios';
 import { RequestObject } from './types';
 
 export interface ApiRequestState {
@@ -11,11 +10,6 @@ export interface ApiRequestState {
   success: boolean;
   isRequested: boolean;
 }
-
-// type EncapsuledRequestWithHooks<T, K extends keyof T> =
-//   Record<K, (...args: any[]) => Promise<T[K]>>;
-
-type EncapsuledRequestWithHooks<T> = { [K in keyof T] :(...args: any[]) => Promise<T[K]> };
 
 export enum apiRequestActions {
   REQUEST,
@@ -57,7 +51,7 @@ const reducer: Reducer<ApiRequestState, apiRequestActions> = (prevState, action)
 };
 
 const prepareObject = <T extends RequestObject> (requestModel: T,
-  dispatch: React.Dispatch<apiRequestActions>): EncapsuledRequestWithHooks<T> => {
+  dispatch: React.Dispatch<apiRequestActions>): T => {
   const keys = Object.keys(requestModel);
   const refillObject: RequestObject = {};
 
@@ -75,7 +69,7 @@ const prepareObject = <T extends RequestObject> (requestModel: T,
     };
   });
 
-  return refillObject as EncapsuledRequestWithHooks<T>;
+  return refillObject as T;
 };
 
 export default <T extends RequestObject> (requestModel: T) => {
