@@ -1,8 +1,19 @@
 import { AxiosInstance } from 'axios';
+import { RequestObject } from '../../types';
 
-export default (axios: AxiosInstance) => ({
-  login: (account: string, password: string) => axios.post('/authenticate', {
+export interface LoginResponse {
+  token: string;
+}
+
+export interface BffIntegration extends RequestObject {
+  login: (account: string, password: string) => Promise<LoginResponse>;
+}
+
+const routesInstances = (axios: AxiosInstance): BffIntegration => ({
+  login: (account: string, password: string): Promise<LoginResponse> => axios.post('/authenticate', {
     account,
     password,
   }),
 });
+
+export default routesInstances;
