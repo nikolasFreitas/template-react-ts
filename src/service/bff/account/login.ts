@@ -5,8 +5,9 @@ export interface LoginResponse {
   token: string;
 }
 
-export interface BffIntegration extends RequestObject {
+export interface BffIntegration extends RequestObject<BffIntegration> {
   login: (account: string, password: string) => Promise<LoginResponse>;
+  gg: () => Promise<void>
 }
 
 const routesInstances = (axios: AxiosInstance): BffIntegration => ({
@@ -14,6 +15,7 @@ const routesInstances = (axios: AxiosInstance): BffIntegration => ({
     account,
     password,
   }),
+  gg: () => axios.get('/'),
 });
 
 export default routesInstances;

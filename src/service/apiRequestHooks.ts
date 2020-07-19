@@ -3,6 +3,7 @@ import {
   useReducer,
   useEffect,
 } from 'react';
+
 import { RequestObject } from './types';
 
 export interface ApiRequestState {
@@ -50,13 +51,17 @@ const reducer: Reducer<ApiRequestState, apiRequestActions> = (prevState, action)
   };
 };
 
-const prepareObject = <T extends RequestObject> (requestModel: T,
+type Generic = { [key: string]: (...args: any[]) => Promise<any>};
+
+type keys<T> = keyof T;
+
+const prepareObject = <T extends RequestObject<T>> (requestModel: T,
   dispatch: React.Dispatch<apiRequestActions>): T => {
-  const keys = Object.keys(requestModel);
-  const refillObject: RequestObject = {};
+  const keys = Object.keys(requestModel) as keys<T>[];
+  const refillObject: Generic = {};
 
   keys.forEach((key) => {
-    refillObject[key] = async (...args: any) => {
+    refillObject[key as string] = async (...args: T[keyof T][]) => {
       let res;
       try {
         dispatch(apiRequestActions.REQUEST);
@@ -72,7 +77,7 @@ const prepareObject = <T extends RequestObject> (requestModel: T,
   return refillObject as T;
 };
 
-export default <T extends RequestObject> (requestModel: T) => {
+export default <T extends RequestObject<T>> (requestModel: T) => {
   const [state, dispatch] = useReducer(reducer, defaultState, init);
 
   useEffect(() => {
