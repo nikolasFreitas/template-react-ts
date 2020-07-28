@@ -10,7 +10,7 @@ export interface BffIntegration extends RequestObject<BffIntegration> {
 }
 
 const routesInstances = (axios: AxiosInstance): BffIntegration => ({
-  login: (account: string, password: string): Promise<LoginResponse> => axios.post('/authenticate', {
+  login: (account: string, password: string) => axios.post('/authenticate', {
     account,
     password,
   }),

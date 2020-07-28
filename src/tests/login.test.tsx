@@ -42,10 +42,12 @@ describe('#LoginScreen', () => {
   describe('Hooks', () => {
     it('should set password', () => {
       const { result } = renderHook(() => loginHooks());
+      const username = 'ff';
       const password = 'gg';
       act(() => {
         result.current.setInputsValue({
           password,
+          username,
         });
       });
 

@@ -7,9 +7,9 @@ import {
 import { RequestObject } from './types';
 
 export interface ApiRequestState {
-  isLoading: boolean;
-  success: boolean;
-  isRequested: boolean;
+  isLoading?: boolean;
+  success?: boolean;
+  isRequested?: boolean;
 }
 
 export enum apiRequestActions {
@@ -28,20 +28,33 @@ const defaultState: ApiRequestState = {
 const init = () => defaultState;
 
 const reducer: Reducer<ApiRequestState, apiRequestActions> = (prevState, action) => {
-  let newState = { ...prevState };
+  let newState: ApiRequestState = {};
   switch (action) {
     case apiRequestActions.REQUEST:
       newState = {
-        ...prevState,
         isLoading: true,
+        isRequested: true,
       };
       break;
+    case apiRequestActions.SET_ERROR:
+      newState = {
+        isLoading: false,
+      };
+      break;
+
+    case apiRequestActions.SET_SUCCESS:
+      newState = {
+        isLoading: false,
+        success: true,
+      };
+      break;
+
     case apiRequestActions.RESET:
       newState = defaultState;
       break;
 
     default:
-      console.info(`action ${action.toString()} does not exist`);
+      console.info(`action ${action} does not exist`);
       break;
   }
 
@@ -69,6 +82,8 @@ const prepareObject = <T extends RequestObject<T>> (requestModel: T,
         dispatch(apiRequestActions.SET_SUCCESS);
       } catch (error) {
         dispatch(apiRequestActions.SET_ERROR);
+        console.error(error);
+        throw error;
       }
       return res;
     };
@@ -79,12 +94,6 @@ const prepareObject = <T extends RequestObject<T>> (requestModel: T,
 
 export default <T extends RequestObject<T>> (requestModel: T) => {
   const [state, dispatch] = useReducer(reducer, defaultState, init);
-
-  useEffect(() => {
-    if (state.isLoading && !state.isRequested) {
-      // log
-    }
-  }, [state]);
 
   return {
     state,

@@ -1,39 +1,41 @@
 import {
   useState,
+  useEffect,
 } from 'react';
 
 import { LoginApi } from '../../service';
+import ApiRequestHooks from '../../service/apiRequestHooks';
 
 const localSave = (token: string) => {
   window.localStorage.setItem('user-token', token);
 };
 
-// TODO
-/*
-  Fazer a hook de erros
- */
 export default () => {
+  const { state: requestState, request } = ApiRequestHooks(LoginApi);
+
   const [inputsValue, setInputsValue] = useState({
     username: '',
     password: '',
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    console.log('Hooks of request:', requestState);
+  }, [requestState]);
 
-  if (isSubmitting) {
-    try {
-      // const response = await LoginApi.login(inputsValue.username, inputsValue.password);
-      // localSave(response.data.token);
-    } catch (error) {
-      console.error(error);
+  const saveUser = async () => {
+    if (!!inputsValue.username && !!inputsValue.password) {
+      try {
+        const res = await request.login(inputsValue.username, inputsValue.password);
+        localSave(res.token);
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
+  };
 
   return {
-    submitStatus: {
-      isSubmitting,
-      setIsSubmitting,
-    },
+    requestState,
+    saveUser,
     inputsValue,
     setInputsValue,
   };

@@ -6,7 +6,7 @@ export default () => {
   const hooks = customHooks();
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
-    hooks.submitStatus.setIsSubmitting(true);
+    hooks.saveUser();
   };
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,13 +35,14 @@ export default () => {
             </label>
           </Styled.InputWrapper>
           <Styled.InputWrapper>
-            <button data-testid="submit-login" type="submit" disabled={hooks.submitStatus.isSubmitting}>
+            <button data-testid="submit-login" type="submit" disabled={hooks.requestState.isLoading}>
               Login
-              {hooks.submitStatus.isSubmitting && '...'}
+              {hooks.requestState.isLoading && '...'}
             </button>
           </Styled.InputWrapper>
         </form>
-        <Styled.ErrorMessage> deu erro aqui </Styled.ErrorMessage>
+        {(hooks.requestState.isRequested && !hooks.requestState.success)
+          && <Styled.ErrorMessage> deu erro aqui </Styled.ErrorMessage>}
       </Styled.LoginBox>
     </Styled.Container>
   );
