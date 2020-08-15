@@ -4,6 +4,7 @@ import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react-hooks';
+import { fail } from 'assert';
 import LoginScreen from '../../screens/Login';
 import loginHooks from '../../screens/Login/hooks';
 
@@ -20,17 +21,34 @@ describe('#LoginScreen', () => {
     });
 
     it('should have a form rendered with its input', () => {
-      const formHtml = screen.queryByTestId('form');
-      expect(formHtml).toBeInTheDocument();
-      expect(formHtml?.getElementsByTagName('input')).not.toBeNull();
+      const usernameInput = screen.queryByTestId('username-input');
+      const passwordInput = screen.queryByTestId('password-input');
+      expect(usernameInput).toBeInTheDocument();
+      expect(passwordInput).toBeInTheDocument();
     });
 
-    it('should start form with button enabled, disabled it when submit and return to the first state', async () => {
+    it('should start form with button disabled, enable it when inputs are filled, submit and return to the first state', async () => {
       const submitButton = screen.getByTestId('submit-login');
-      expect(submitButton).toBeEnabled();
+      const usernameInput = screen.queryByTestId('username-input') as HTMLInputElement;
+      const passwordInput = screen.queryByTestId('password-input') as HTMLInputElement;
+
+      if (!usernameInput || !passwordInput) {
+        fail('Inputs not exists');
+      }
+
+      expect(submitButton).toBeDisabled();
 
       (axios.get as jest.Mock).mockResolvedValueOnce({
         token: 'stirng',
+      });
+
+      fireEvent.change(passwordInput, { target: { value: 'qualquer password' } });
+      fireEvent.change(usernameInput, { target: { value: 'teste' } });
+
+      console.log('passwod input: ', usernameInput.value);
+
+      await waitFor(() => {
+        expect(submitButton).toBeEnabled();
       });
 
       fireEvent.click(submitButton);
