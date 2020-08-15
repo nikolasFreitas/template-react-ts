@@ -1,6 +1,7 @@
 import {
   useState,
   useEffect,
+  useRef,
 } from 'react';
 
 import { LoginApi } from '../../service';
@@ -12,6 +13,7 @@ const localSave = (token: string) => {
 
 export default () => {
   const { state: requestState, request } = ApiRequestHooks(LoginApi);
+  const isValid = useRef(false);
 
   const [inputsValue, setInputsValue] = useState({
     username: '',
@@ -19,11 +21,13 @@ export default () => {
   });
 
   useEffect(() => {
-    console.log('Hooks of request:', requestState);
-  }, [requestState]);
+    if (!!inputsValue.username && !!inputsValue.password) {
+      isValid.current = true;
+    }
+  }, [inputsValue]);
 
   const saveUser = async () => {
-    if (!!inputsValue.username && !!inputsValue.password) {
+    if (isValid.current) {
       try {
         const res = await request.login(inputsValue.username, inputsValue.password);
         localSave(res.token);
@@ -38,5 +42,6 @@ export default () => {
     saveUser,
     inputsValue,
     setInputsValue,
+    isValid: isValid.current,
   };
 };
