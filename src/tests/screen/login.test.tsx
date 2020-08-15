@@ -1,10 +1,13 @@
 import React from 'react';
+import axios from 'axios';
 import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react-hooks';
-import LoginScreen from '../screens/Login';
-import loginHooks from '../screens/Login/hooks';
+import LoginScreen from '../../screens/Login';
+import loginHooks from '../../screens/Login/hooks';
+
+jest.mock('axios');
 
 describe('#LoginScreen', () => {
   describe('UI', () => {
@@ -26,15 +29,19 @@ describe('#LoginScreen', () => {
       const submitButton = screen.getByTestId('submit-login');
       expect(submitButton).toBeEnabled();
 
+      (axios.get as jest.Mock).mockResolvedValueOnce({
+        token: 'stirng',
+      });
+
       fireEvent.click(submitButton);
 
-      expect(submitButton).toBeDisabled();
+      await waitFor(() => {
+        expect(submitButton).toBeDisabled();
+      });
 
       // Waits the submit ends
       await waitFor(() => {
         expect(submitButton).toBeEnabled();
-      }, {
-        timeout: 1500,
       });
     });
   });

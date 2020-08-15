@@ -1,10 +1,30 @@
 import {
   Reducer,
   useReducer,
-  useEffect,
 } from 'react';
 
-import { RequestObject } from './types';
+import { RequestObject, keys, Generic } from './types';
+
+// Main idea of this hook
+// service to create the request
+// A: {
+//   login: (account, password) => return post api,
+//   b: (param2, param3) => return get api
+// }
+
+// Embedded with this hook result
+// B: {
+//   login: (account, password): (param1) => {
+//     executeThings();
+//     ...
+//     return A.login((account, password));
+//   },
+//   b: (param2, param3) => {
+//     executeThings();
+//     ...
+//     return A.b(param2, param3);
+//   },
+// }
 
 export interface ApiRequestState {
   isLoading?: boolean;
@@ -64,21 +84,17 @@ const reducer: Reducer<ApiRequestState, apiRequestActions> = (prevState, action)
   };
 };
 
-type Generic = { [key: string]: (...args: any[]) => Promise<any>};
-
-type keys<T> = keyof T;
-
-const prepareObject = <T extends RequestObject<T>> (requestModel: T,
+const prepareObject = <T extends RequestObject<T>> (requestServiceModel: T,
   dispatch: React.Dispatch<apiRequestActions>): T => {
-  const keys = Object.keys(requestModel) as keys<T>[];
+  const serviceModelKeys = Object.keys(requestServiceModel) as keys<T>[];
   const refillObject: Generic = {};
 
-  keys.forEach((key) => {
+  serviceModelKeys.forEach((key) => {
     refillObject[key as string] = async (...args: T[keyof T][]) => {
       let res;
       try {
         dispatch(apiRequestActions.REQUEST);
-        res = await requestModel[key](...args);
+        res = await requestServiceModel[key](...args);
         dispatch(apiRequestActions.SET_SUCCESS);
       } catch (error) {
         dispatch(apiRequestActions.SET_ERROR);
