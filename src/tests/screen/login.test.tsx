@@ -8,7 +8,13 @@ import { fail } from 'assert';
 import LoginScreen from '../../screens/Login';
 import loginHooks from '../../screens/Login/hooks';
 
-jest.mock('axios');
+jest.mock('axios', () => ({
+  create: () => ({
+    post: async () => ({
+      token: 'stirng',
+    }),
+  }),
+}));
 
 describe('#LoginScreen', () => {
   describe('UI', () => {
@@ -27,6 +33,11 @@ describe('#LoginScreen', () => {
       expect(passwordInput).toBeInTheDocument();
     });
 
+    it('should start with button disabled', () => {
+      const submitButton = screen.getByTestId('submit-login');
+      expect(submitButton).toBeDisabled();
+    });
+
     it('should start form with button disabled, enable it when inputs are filled, submit and return to the first state', async () => {
       const submitButton = screen.getByTestId('submit-login');
       const usernameInput = screen.queryByTestId('username-input') as HTMLInputElement;
@@ -36,16 +47,8 @@ describe('#LoginScreen', () => {
         fail('Inputs not exists');
       }
 
-      expect(submitButton).toBeDisabled();
-
-      (axios.get as jest.Mock).mockResolvedValueOnce({
-        token: 'stirng',
-      });
-
-      fireEvent.change(passwordInput, { target: { value: 'qualquer password' } });
-      fireEvent.change(usernameInput, { target: { value: 'teste' } });
-
-      console.log('passwod input: ', usernameInput.value);
+      fireEvent.change(passwordInput, { target: { value: 'oi' } });
+      fireEvent.change(usernameInput, { target: { value: 'user go' } });
 
       await waitFor(() => {
         expect(submitButton).toBeEnabled();
@@ -70,13 +73,27 @@ describe('#LoginScreen', () => {
       const username = 'ff';
       const password = 'gg';
       act(() => {
-        result.current.setInputsValue({
-          password,
-          username,
+        result.current.onInputChange({
+          // @ts-ignore
+          target: {
+            name: 'username',
+            value: username,
+          },
+        });
+      });
+
+      act(() => {
+        result.current.onInputChange({
+          // @ts-ignore
+          target: {
+            name: 'password',
+            value: password,
+          },
         });
       });
 
       expect(result.current.inputsValue.password).toEqual(password);
+      expect(result.current.inputsValue.username).toEqual(username);
     });
   });
 });
