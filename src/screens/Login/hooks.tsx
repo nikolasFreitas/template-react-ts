@@ -18,8 +18,7 @@ export default () => {
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { target } = event;
-    console.log(target.name, target.value);
-    
+
     setInputsValue((prevState) => ({
       ...prevState,
       [target.name]: target.value,
