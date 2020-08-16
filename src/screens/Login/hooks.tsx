@@ -1,8 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { LoginApi } from '../../service';
 import ApiRequestHooks from '../../service/apiRequestHooks';
@@ -13,23 +9,39 @@ const localSave = (token: string) => {
 
 export default () => {
   const { state: requestState, request } = ApiRequestHooks(LoginApi);
-  const isValid = useRef(false);
+  const [isValid, setisValid] = useState(false);
 
   const [inputsValue, setInputsValue] = useState({
     username: '',
     password: '',
   });
 
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { target } = event;
+    console.log(target.name, target.value);
+    
+    setInputsValue((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+
   useEffect(() => {
-    if (!!inputsValue.username && !!inputsValue.password) {
-      isValid.current = true;
+    if (inputsValue.username && inputsValue.password) {
+      setisValid(true);
+    } else {
+      setisValid(false);
     }
   }, [inputsValue]);
 
-  const saveUser = async () => {
-    if (isValid.current) {
+  const saveUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isValid) {
       try {
-        const res = await request.login(inputsValue.username, inputsValue.password);
+        const res = await request.login(
+          inputsValue.username,
+          inputsValue.password,
+        );
         localSave(res.token);
       } catch (error) {
         console.log(error);
@@ -41,7 +53,7 @@ export default () => {
     requestState,
     saveUser,
     inputsValue,
-    setInputsValue,
-    isValid: isValid.current,
+    onInputChange,
+    isValid,
   };
 };
