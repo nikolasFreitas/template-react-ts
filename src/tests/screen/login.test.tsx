@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
@@ -94,6 +93,35 @@ describe('#LoginScreen', () => {
 
       expect(result.current.inputsValue.password).toEqual(password);
       expect(result.current.inputsValue.username).toEqual(username);
+    });
+
+    it('should change isValid state to true when fill de input', () => {
+      const { result } = renderHook(() => loginHooks());
+      const username = 'ff';
+      const password = 'gg';
+      act(() => {
+        result.current.onInputChange({
+          // @ts-ignore
+          target: {
+            name: 'username',
+            value: username,
+          },
+        });
+      });
+
+      expect(result.current.isValid).toBeFalsy();
+
+      act(() => {
+        result.current.onInputChange({
+          // @ts-ignore
+          target: {
+            name: 'password',
+            value: password,
+          },
+        });
+      });
+
+      expect(result.current.isValid).toBeTruthy();
     });
   });
 });
