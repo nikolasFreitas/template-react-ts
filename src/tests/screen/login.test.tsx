@@ -6,14 +6,11 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { fail } from 'assert';
 import LoginScreen from '../../screens/Login';
 import loginHooks from '../../screens/Login/hooks';
+import { LoginApi } from '../../service';
 
-jest.mock('axios', () => ({
-  create: () => ({
-    post: async () => ({
-      token: 'stirng',
-    }),
-  }),
-}));
+jest.spyOn(LoginApi, 'login').mockResolvedValue({
+  token: 'heeeeey',
+});
 
 describe('#LoginScreen', () => {
   describe('UI', () => {
