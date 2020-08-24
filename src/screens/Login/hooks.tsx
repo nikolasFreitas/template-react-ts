@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { LoginApi } from '../../service';
 import ApiRequestHooks from '../../service/apiRequestHooks';
